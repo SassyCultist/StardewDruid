@@ -45,7 +45,7 @@ namespace StardewDruid.Data
                 case Rite.Rites.fates: return Mod.instance.Helper.Translation.Get("DialogueData.41");
                 case Rite.Rites.ether: return Mod.instance.Helper.Translation.Get("DialogueData.42");
                 case Rite.Rites.bones: return Mod.instance.Helper.Translation.Get("DialogueData.312.2");
-                case Rite.Rites.bombs: return Mod.instance.Helper.Translation.Get("DialogueData.361.2");
+                //case Rite.Rites.bombs: return Mod.instance.Helper.Translation.Get("DialogueData.361.2");
             }
 
         }

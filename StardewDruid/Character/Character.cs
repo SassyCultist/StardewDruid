@@ -222,6 +222,24 @@ namespace StardewDruid.Character
         public int trackDashProgress;
         public Vector2 setPosition = Vector2.Zero;
 
+        private static IReflectedProperty<HashSet<StardewValley.Monsters.GreenSlime>>? PipedSlimesReflected;
+        public static void InitializeReflection(IModHelper helper)
+        {
+            if (helper.ModRegistry.IsLoaded("DaLion.Professions"))
+            {
+                var professionsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                    .FirstOrDefault(a => a.GetName().Name == "DaLion.Professions");
+                if (professionsAssembly != null)
+                {
+                    var greenSlimePipedType = professionsAssembly.GetType("DaLion.Professions.Framework.VirtualProperties.GreenSlime_Piped", throwOnError: false);
+                    if (greenSlimePipedType != null)
+                    {
+                        PipedSlimesReflected = helper.Reflection.GetProperty<HashSet<StardewValley.Monsters.GreenSlime>>(greenSlimePipedType, "PipedSlimes", required: false);
+                    }
+                }
+            }
+        }
+
         public override Stack<StardewValley.Dialogue> CurrentDialogue
         {
             get
@@ -2670,62 +2688,43 @@ namespace StardewDruid.Character
 
         public virtual bool TargetMonster()
         {
-
-            if(currentLocation.IsFarm)
-            {
-
+            if (currentLocation.IsFarm)
                 return false;
-
-            }
 
             List<StardewValley.Monsters.Monster> monsters = FindMonsters();
 
-            if (monsters.Count == 0)
+            // Exclude piped slimes if needed
+            if (PipedSlimesReflected?.GetValue() is HashSet<StardewValley.Monsters.GreenSlime> pipedSlimes)
             {
-
-                return false;
-
+                monsters = monsters
+                    .Where(m =>
+                        m is not StardewValley.Monsters.GreenSlime gs ||
+                        !pipedSlimes.Contains(gs))
+                    .ToList();
             }
+
+            if (monsters.Count == 0)
+                return false;
 
             // attempt attack
             if (cooldownTimer <= 0)
             {
-
                 foreach (StardewValley.Monsters.Monster monster in monsters)
                 {
-
                     if (MonsterAttack(monster))
-                    {
-
                         return true;
-
-                    }
-
                 }
-
             }
 
             // too far from player
-            if(TrackToFar(1280,36))
+            if (TrackToFar(1280, 36))
             {
-
-                // warp back to player
-                Vector2 lastPosition = Position;
-
                 if (Mod.instance.trackers[characterType].WarpToPlayer())
-                {
-
                     return true;
-
-                }
-
             }
 
-            // stay alert
             TargetIdle(180, idles.alert);
-
             return true;
-
         }
 
         public virtual bool MonsterAttack(StardewValley.Monsters.Monster monster)

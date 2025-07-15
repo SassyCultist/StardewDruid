@@ -332,7 +332,7 @@ namespace StardewDruid.Data
 
                     title = Mod.instance.Helper.Translation.Get("LoreData.340.1.6"),
 
-                    quest = QuestHandle.startPoint,
+                    quest = QuestHandle.receiveStone,
 
                     display = IconData.displays.weald,
 
@@ -988,7 +988,7 @@ namespace StardewDruid.Data
             {
                 loreset = LoreSet.loresets.Grove,
                 loretype = LoreStory.loretypes.information,
-                quest = QuestHandle.startPoint,
+                quest = QuestHandle.receiveStone,
                 description = Mod.instance.Helper.Translation.Get("LoreData.340.1.305"),
                 details = new()
                {

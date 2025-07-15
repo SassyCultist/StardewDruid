@@ -214,6 +214,8 @@ namespace StardewDruid
 
             instance = this;
 
+            StardewDruid.Character.Character.InitializeReflection(helper);
+
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
 
             helper.Events.GameLoop.SaveLoaded += SaveLoaded;
