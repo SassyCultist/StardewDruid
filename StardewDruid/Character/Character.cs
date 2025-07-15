@@ -2689,7 +2689,11 @@ namespace StardewDruid.Character
         public virtual bool TargetMonster()
         {
             if (currentLocation.IsFarm)
+            {
+
                 return false;
+
+            }
 
             List<StardewValley.Monsters.Monster> monsters = FindMonsters();
 
@@ -2704,27 +2708,51 @@ namespace StardewDruid.Character
             }
 
             if (monsters.Count == 0)
+            {
+
                 return false;
+
+            }
 
             // attempt attack
             if (cooldownTimer <= 0)
             {
+
                 foreach (StardewValley.Monsters.Monster monster in monsters)
                 {
+
                     if (MonsterAttack(monster))
+                    {
+
                         return true;
+
+                    }
+
                 }
+
             }
 
             // too far from player
             if (TrackToFar(1280, 36))
             {
+
+                // warp back to player
+                Vector2 lastPosition = Position;
+
                 if (Mod.instance.trackers[characterType].WarpToPlayer())
+                {
+
                     return true;
+
+                }
+
             }
 
+            // stay alert
             TargetIdle(180, idles.alert);
+
             return true;
+
         }
 
         public virtual bool MonsterAttack(StardewValley.Monsters.Monster monster)
